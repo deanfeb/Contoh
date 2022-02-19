@@ -26,7 +26,7 @@ namespace Contoh.Microservice.Employee.Controllers
 
         [HttpPost]
         [Route("add")]
-        public ResponseBase<Domain.Entities.Unit> Add(Domain.Entities.Unit unit)
+        public ResponseBase<Domain.Entities.Unit> Add([FromBody] Domain.Entities.Unit unit)
         {
             return _unitService.Add(unit);
         }

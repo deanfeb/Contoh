@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Newtonsoft.Json.Linq;
 using System.Text;
+using Newtonsoft.Json;
 
 namespace MvcClient.Controllers
 {
@@ -27,29 +28,35 @@ namespace MvcClient.Controllers
             return View();
         }
 
-      
-        public async Task<IActionResult> GetUnit()
+
+        public async Task<IActionResult> GetUnit(int id=0)
         {
             var accessToken = await HttpContext.GetTokenAsync("access_token");
 
             var client = new HttpClient();
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-            var content = await client.GetStringAsync(apiurl + "/apigw/unit/1");
+            var content = await client.GetStringAsync(apiurl + "/apigw/unit/" + id.ToString());
 
             //ViewBag.Json = JArray.Parse(content).ToString();
             return Json(content);
         }
 
-        public async Task<IActionResult> DelUnit()
+        public async Task<IActionResult> DelUnit(int id =0)
         {
             var accessToken = await HttpContext.GetTokenAsync("access_token");
 
             var client = new HttpClient();
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-            var content = await client.PostAsync(apiurl + "/apigw/unit/del/1",null);
+            var response = await client.PostAsync(apiurl + "/apigw/unit/del/" + id.ToString(), null);
 
             //ViewBag.Json = JArray.Parse(content.Content.ToString()).ToString();
-            return Json(content);
+
+            var result = await response.Content.ReadAsStringAsync();
+
+            return Json(result);
+
+
+            
         }
 
         public async Task<IActionResult> AddUnit()
@@ -57,28 +64,50 @@ namespace MvcClient.Controllers
             var accessToken = await HttpContext.GetTokenAsync("access_token");
 
             var client = new HttpClient();
-            client.DefaultRequestHeaders.Clear();
-            client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("text/plain"));
+            //client.DefaultRequestHeaders.Clear();
+
             client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-            var jdata = new { code = 1, isActive = true, name = "XX" + DateTime.Now.ToShortTimeString(), created_at = DateTime.Now, created_by = 1 };
+            var jdata = new { id = 0, code = "code5", isActive = true, name = "XX" + DateTime.Now.ToShortTimeString(), created_at = DateTime.Now, created_by = 1 };
+            //var payload = "{ \"id\":0, \"code\": \"code2\",\"isActive\": true,\"name\":\"XXX\", \"created_at\":\"2022-02-19T06:32:08.082Z\",\"created_by\":1 }";
 
-            string jsondata = Newtonsoft.Json.JsonConvert.SerializeObject(jdata); //"{ Code:\"1\", Name:\"dian\", created_at:\"2022-02-19T02: 11:03.916Z\", created_by=1 }";
-
+            string jsonstring = JsonConvert.SerializeObject(jdata);
             
 
-            var stringContent = new StringContent( jsondata, UnicodeEncoding.UTF8, "application/json"); // use MediaTypeNames.Application.Json in Core 3.0+ and Standard 2.1+
+            HttpContent c = new StringContent(jsonstring.ToString(), Encoding.UTF8, "application/json");
+            c.Headers.ContentType= new MediaTypeHeaderValue("application/json");
 
-            stringContent.Headers.Remove("Content-Type"); // "{application/json; charset=utf-8}"
-            stringContent.Headers.Add("Content-Type", "application/json");
+            var response = await client.PostAsync(apiurl + "/apigw/unit/add", c);
+
+            var result = await  response.Content.ReadAsStringAsync();
+
+            return Json(result);
+        }
+
+        public async Task<IActionResult> UpdateUnit()
+        {
+            var accessToken = await HttpContext.GetTokenAsync("access_token");
+
+            var client = new HttpClient();
+            //client.DefaultRequestHeaders.Clear();
+
+            client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+            var jdata = new { id = 1, code = "code5", isActive = true, name = "XX" + DateTime.Now.ToShortTimeString(), created_at = DateTime.Now, created_by = 1 };
+            //var payload = "{ \"id\":0, \"code\": \"code2\",\"isActive\": true,\"name\":\"XXX\", \"created_at\":\"2022-02-19T06:32:08.082Z\",\"created_by\":1 }";
+
+            string jsonstring = JsonConvert.SerializeObject(jdata);
 
 
-            var content = await client.PostAsync(apiurl + "/apigw/unit/add", stringContent);
-            //var content = await client.PostAsJsonAsync(apiurl + "/apigw/unit/add", 
-            //    new { code = 1, isactive=true, name="XX"+DateTime.Now.ToShortTimeString(), created_at=DateTime.Now, created_by=1 });
+            HttpContent c = new StringContent(jsonstring.ToString(), Encoding.UTF8, "application/json");
+            c.Headers.ContentType = new MediaTypeHeaderValue("application/json");
 
-            ViewBag.Json = JArray.Parse(content.Content.ToString()).ToString();
-            return View("json");
+            var response = await client.PostAsync(apiurl + "/apigw/unit/update", c);
+
+            var result = await response.Content.ReadAsStringAsync();
+
+            return Json(result);
+
         }
 
         public IActionResult Logout()
