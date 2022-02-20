@@ -1,33 +1,34 @@
 ﻿@using Microsoft.AspNetCore.Authentication
 
-<h2>Claims</h2>
-
-<a href="https://localhost:44394/home/delunit">Del Unit</a>
-<a href="https://localhost:44394/home/GetUnit/1">Get Unit id</a>
-<a href="https://localhost:44394/home/addunit">Add Unit</a>
-
-<a href="https://localhost:44394/home/updateunit">Update Unit</a>
 
 
 <br />
 <br />
-<br />
-<br />
 
-<dl>
-    @foreach (var claim in User.Claims)
-    {
-        <dt>@claim.Type</dt>
-        <dd>@claim.Value</dd>
-    }
-</dl>
+                                            <div id="dgData"></div>
 
-<h2>Properties</h2>
+@section Scripts {
 
-<dl>
- @*   @foreach (var prop in (await Context.AuthenticateAsync()).Properties.Items)
-    {
-        <dt>@prop.Key</dt>
-        <dd>@prop.Value</dd>
-    }*@
-</dl>
+
+<script>
+var dgData = $("#dgData").dxDataGrid({
+                    dataSource: {
+                        store: DevExpress.data.AspNet.createStore({
+                            "key": "Id",
+                            "loadUrl": "/home/GetList",
+                            "insertUrl": "/home/SaveAdd",
+                            "updateUrl": "/home/SaveUpdate",
+                            "deleteUrl": "/home/delunit"
+                        })
+                    },
+                    keyExpr: "Id",
+                    editing:{allowAdding:true, allowDeleting:true, allowUpdating:true},
+                    columns: ["Name","Code","IsActive"],
+                    paging: { enabled: true, pageSize: 10 },
+                    pager: { showPageSizeSelector: true, allowedPageSizes: [10, 20, 50, 100], showInfo: true },
+
+                            
+                        }).dxDataGrid("instance");
+</script>                                            
+                                            
+}

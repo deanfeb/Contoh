@@ -1,4 +1,6 @@
-﻿using Contoh.Microservice.Employee.Models;
+﻿
+
+using Domain.Entities;
 
 namespace Contoh.Microservice.Employee.Interfaces
 {

@@ -1,5 +1,8 @@
 ﻿using Contoh.Microservice.Employee.Interfaces;
-using Contoh.Microservice.Employee.Models;
+
+using DevExtreme.AspNet.Data;
+using DevExtreme.AspNet.Data.ResponseModel;
+using DevExtreme.AspNet.Mvc;
 using Domain.Entities;
 using Domain.Interfaces;
 
@@ -73,6 +76,20 @@ namespace Contoh.Microservice.Employee.Services
             return response;
         }
 
+        public LoadResult GetList(DataSourceLoadOptions loadOptions)
+        {
+            var data = _unitOfWork.Units.GetAllQueryable();
+
+            return DataSourceLoader.Load(data, loadOptions);
+        }
+
+        public LoadResult GetList2(DataSourceLoadOptions loadOptions)
+        {
+            var data = _unitOfWork.Units.GetQueryable();
+
+            return DataSourceLoader.Load(data, loadOptions);
+        }
+
         public ResponseBase<Unit> Update(Unit obj)
         {
             var response = new ResponseBase<Domain.Entities.Unit>() { Success = SuccessType.Success, Message = "Success" };
@@ -81,7 +98,7 @@ namespace Contoh.Microservice.Employee.Services
             {
                 var unit = _unitOfWork.Units.GetById(obj.Id);
                 unit.Code = obj.Code;
-                unit.Name= obj.Name;
+                unit.Name = obj.Name;
                 unit.IsActive = obj.IsActive;
 
                 _unitOfWork.Complete();

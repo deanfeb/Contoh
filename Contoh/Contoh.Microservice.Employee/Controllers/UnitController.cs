@@ -1,5 +1,8 @@
 ﻿using Contoh.Microservice.Employee.Interfaces;
-using Contoh.Microservice.Employee.Models;
+
+using DevExtreme.AspNet.Data.ResponseModel;
+using DevExtreme.AspNet.Mvc;
+using Domain.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,6 +18,20 @@ namespace Contoh.Microservice.Employee.Controllers
             _unitService = unitService;
         }
 
+
+        [HttpPost]
+        [Route("GetList")]
+        public LoadResult GetList(DataSourceLoadOptions loadOptions)
+        {
+            return _unitService.GetList(loadOptions);
+        }
+
+        [HttpPost]
+        [Route("GetList2")]
+        public LoadResult GetList2(DataSourceLoadOptions loadOptions)
+        {
+            return _unitService.GetList2(loadOptions);
+        }
 
 
         [HttpGet]

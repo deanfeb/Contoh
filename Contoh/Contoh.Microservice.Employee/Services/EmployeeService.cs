@@ -1,5 +1,5 @@
 ﻿using Contoh.Microservice.Employee.Interfaces;
-using Contoh.Microservice.Employee.Models;
+using Domain.Entities;
 using Domain.Interfaces;
 
 namespace Contoh.Microservice.Employee.Services

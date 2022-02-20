@@ -10,6 +10,7 @@ using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddMvc(option => option.EnableEndpointRouting = true).AddJsonOptions(options => options.JsonSerializerOptions.PropertyNamingPolicy = null);
 
 #region Repositories
 

@@ -1,4 +1,7 @@
-﻿using Contoh.Microservice.Employee.Models;
+﻿
+using DevExtreme.AspNet.Data.ResponseModel;
+using DevExtreme.AspNet.Mvc;
+using Domain.Entities;
 
 namespace Contoh.Microservice.Employee.Interfaces
 {
@@ -10,6 +13,9 @@ namespace Contoh.Microservice.Employee.Interfaces
         ResponseBase<Domain.Entities.Unit> Update(Domain.Entities.Unit obj);
 
         ResponseBase<Domain.Entities.Unit> Delete(int id);
+
+        LoadResult GetList(DataSourceLoadOptions loadOptions);
+        LoadResult GetList2(DataSourceLoadOptions loadOptions);
 
     }
 }

@@ -29,6 +29,8 @@ builder.Services.AddAuthentication(options =>
     options.SaveTokens = true;
 });
 
+builder.Services.AddMvc(option => option.EnableEndpointRouting = true).AddJsonOptions(options => options.JsonSerializerOptions.PropertyNamingPolicy = null);
+
 
 var app = builder.Build();
 

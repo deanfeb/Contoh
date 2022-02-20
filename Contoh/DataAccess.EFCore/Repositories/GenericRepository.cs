@@ -30,6 +30,12 @@ namespace DataAccess.EFCore.Repositories
         {
             return _context.Set<T>().ToList();
         }
+
+        public IQueryable<T> GetAllQueryable()
+        {
+            return _context.Set<T>().AsQueryable();
+        }
+
         public T GetById(int id)
         {
             return _context.Set<T>().Find(id);
